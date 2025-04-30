@@ -6,9 +6,6 @@
 #include <stdbool.h>
 #include <conio.h>
 
-// Screen clearing:
-#define CLEAR_TERMINAL system("cls")
-
 // Colors:
 
 // Reset
@@ -40,6 +37,10 @@
 #define KEY_LEFT   75
 #define KEY_RIGHT  77
 #define KEY_ENTER  13
+
+// Shortcuts:
+#define CLEAR_TERMINAL system("cls")
+#define PRINT_ERROR(error) printf("%sERROR:%s %s\n", RED, RESET, error)
 
 /*
  * The following function checkes whether or not a pressed key is in the array of relevant keys.
