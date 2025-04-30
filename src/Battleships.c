@@ -1,5 +1,4 @@
 #include "Menu.h"   
-#include <stdlib.h>
 
 /*
  * Compilation line:
@@ -8,6 +7,6 @@ gcc -o Battleships src/Battleships.c src/IO_Assist.h src/IO_Assist.c src/Menu.h 
 
 int
 main(void) {
-    print_logo();
+    printf("%d\n", get_menu_function());
     return EXIT_SUCCESS;
 }

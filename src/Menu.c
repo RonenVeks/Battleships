@@ -24,5 +24,35 @@ print_logo() {
     printf("                                ,8P         _,odPP''\n");
     printf("                               d8'    __,odPP'\n");
     printf("                               Y8oooo8PP'\n");
-    printf("                                ~~~~~~\n");
+    printf("                                ~~~~~~%s\n", RESET);
+}
+
+int
+get_menu_function() {
+    int keys[] = { KEY_UP, KEY_DOWN, KEY_ENTER }, key, option = 1;
+    bool chose = false;
+
+    while (!chose) {
+        key = 0;
+
+        CLEAR_TERMINAL;
+
+        print_logo();
+        
+        printf("%s%sJoin Game%s\n", option == 1 ? " -> " : "    ", GREEN, RESET);
+        printf("%s%sCreate Game%s\n", option == 2 ? " -> " : "    ", YELLOW, RESET);
+        printf("%s%sExit%s\n", option == 3 ? " -> " : "    ", RED, RESET);
+
+        while (!check_key_validation(keys, 3, key)) key = _getch();
+        if (key == KEY_UP && option > 1) option--;
+        else if (key == KEY_DOWN && option < 3) option++;
+        else chose = true;
+    }
+
+    switch (option) {
+        case 1: return JOIN_CODE;
+        case 2: return CREATE_CODE;
+        case 3: return EXIT_CODE;
+        default: return 1;
+    }
 }

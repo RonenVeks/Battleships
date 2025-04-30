@@ -2,9 +2,12 @@
 #define IO_ASSIST
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
-#include <termios.h>
-#include <unistd.h>
+#include <conio.h>
+
+// Screen clearing:
+#define CLEAR_TERMINAL system("cls")
 
 // Colors:
 
@@ -31,13 +34,12 @@
 #define BG_CYAN     "\033[46m"
 #define BG_WHITE    "\033[47m"
 
-/*
- * (Copied from ChatGPT)
- * The following function accepts the keyboard input of the user without displaying the pressed key.
- * Input: None.
- * Output: The integer value of the pressed key (ASCII).
- */
-int _getch();
+// Special buttons:
+#define KEY_UP     72
+#define KEY_DOWN   80
+#define KEY_LEFT   75
+#define KEY_RIGHT  77
+#define KEY_ENTER  13
 
 /*
  * The following function checkes whether or not a pressed key is in the array of relevant keys.
