@@ -75,3 +75,17 @@ allocation_failure:
     PRINT_ERROR("Memory allocation failed");
     return NULL;
 }
+
+void 
+free_player(player_t* p_player) {
+    // Freeing the allocation of the ships
+    for (int ship = 0; ship < SHIPS_AMOUNT; ship++)
+        free(p_player->ships[ship].positions);
+    free(p_player->ships);
+
+    // Freeing the allocation of the board's matrix
+    for (int row = 0; row < BOARD_SIZE; row++)
+        free(p_player->board[row]);
+    free(p_player->board);
+    free(p_player);
+}

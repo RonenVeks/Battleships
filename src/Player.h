@@ -44,4 +44,11 @@ typedef struct {
  */
 player_t* initialize_player(SOCKET* p_socket);
 
+/*
+ * The following function will free the allocation of a given player.
+ * Input: A pointer to the player.
+ * Output: None.
+ */
+void free_player(player_t* p_player);
+
 #endif // PLAYER_H
