@@ -13,7 +13,10 @@
 #define MISS -2
 
 // Plan ships will be increased by this number for easier displaying
-#define PLAN_DIFFERENCE
+#define PLAN_DIFFERENCE 6
+
+// Ship ASCII displaying value
+#define SHIP_ASCII (char)(178)
 
 typedef struct {
     int row, column;

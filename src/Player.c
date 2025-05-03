@@ -90,6 +90,28 @@ free_player(player_t* p_player) {
     free(p_player);
 }
 
+static void
+display_cell(cell_t cell) {
+    switch (cell.value) {
+        case WATER:
+            cell.marked ? printf("%s%s~%s", BG_BLUE, BLACK, RESET) : printf("%s~", BLUE);
+            break;
+        case HIT:
+            cell.marked ? printf("%s%sX%s", BG_RED, BLACK, RESET) : printf("%s%sX%s", BG_WHITE, RED, RESET);
+            break;
+        case MISS:
+            cell.marked ? printf("%s%s#%s", BG_GREEN, BLACK, RESET) : printf("%s#", GREEN);
+            break;
+        case PLAN_DIFFERENCE:
+            printf("%s%c", GREEN, SHIP_ASCII);
+            break;
+        default:
+            printf("%s%c", cell.value > PLAN_DIFFERENCE ? RED : RESET, SHIP_ASCII);
+            break;
+    }
+    printf("%s|", YELLOW);
+}
+
 /*
  * The following function prints out the ship placement menu in a nice and comfortable way.
  * Input: A pointer to the player and the ship option they're currently on.
