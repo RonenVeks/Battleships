@@ -61,3 +61,57 @@ print_ip() {
     free(adapter_info);
     return true;
 }
+
+bool 
+accept_partner(SOCKET* p_socket) {
+    SOCKET server_socket;
+    struct sockaddr_in server_address, client_address;
+    int address_length = sizeof(client_address);
+
+    // Displaying server's IP:
+    CLEAR_TERMINAL;
+    printf("%sTell your friend your IP:%s ", GREEN, RESET);
+    if (!print_ip())
+        return false;
+
+    // Creating an accepting socket
+    server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_socket == INVALID_SOCKET) {
+        PRINT_ERROR("Socket creation failed");
+        goto accepting_failure;
+    }
+
+    // Configuring server address
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = INADDR_ANY;
+    server_address.sin_port = htons(PORT);
+
+    // Bind the socket
+    if (bind(server_socket, (struct sockaddr*)&server_address, sizeof(server_address)) == SOCKET_ERROR) {
+        PRINT_ERROR("Socket binding failed");
+        closesocket(server_socket);
+        goto accepting_failure;
+    }
+
+    //Making the socket listen
+    if (listen(server_socket, 1) == SOCKET_ERROR) {
+        PRINT_ERROR("Socket listening failed");
+        closesocket(server_socket);
+        goto accepting_failure;
+    }
+
+    // Accepting the client 
+    *p_socket = accept(server_socket, (struct sockaddr*)&client_address, &address_length);
+    if (*p_socket == INVALID_SOCKET) {
+        PRINT_ERROR("Client accepting failed");
+        closesocket(server_socket);
+        goto accepting_failure;
+    }
+
+    printf("Partner connected!\n");
+    return true;
+
+accepting_failure:
+    WSACleanup();
+    return false;
+}

@@ -17,4 +17,11 @@
 #define R_NO_ERROR 0
 #define R_ERROR_BUFFER_OVERFLOW 111
 
+/*
+ * The following function waits for the partner to connect.
+ * Input: A pointer to the socket on which the connection is established.
+ * Output: A boolean value that indicates whether or not was the connection successfull.
+ */
+bool accept_partner(SOCKET* p_socket);
+
 #endif // COMMUNICATION_H
