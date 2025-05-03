@@ -90,8 +90,33 @@ free_player(player_t* p_player) {
     free(p_player);
 }
 
+/*
+ * The following function prints out the ship placement menu in a nice and comfortable way.
+ * Input: A pointer to the player and the ship option they're currently on.
+ * Output: None.
+ */
+static void
+display_ships_menu(player_t* p_player, int option) {
+    int line;
+
+    CLEAR_TERMINAL;
+
+    printf("%sShips Left:     %s___________________\n", MAGENTA, YELLOW);
+
+    // Print out ships sizes
+    for (line = 0; line < SHIPS_AMOUNT - 1; line++) {
+        option == line + 1 ? printf("%s -> ", RESET) : printf("    ");
+
+        if (line == 1) { // There are 2 ships at the size of 3 cells
+            if ((!p_player->ships[1].put) && (!p_player->ships[SHIPS_AMOUNT - 1].put))// If the user didn't put none of the 3 cell-long ships
+                printf("%s3 Cells x2 ", GREEN);
+            else (p_player->ships[1].put && p_player->ships[SHIPS_AMOUNT - 1].put) ? 
+            printf("%s3 Cells    ", RED) : printf("%s3 Cells    ", GREEN);
+        } else printf("%s%d Cells    ", p_player->ships[line].put ? RED : GREEN,line + 2);
+    }
+
+}
+
 void 
 put_ships(player_t* p_player) {
-    int option = 1, key, ships_put = 0;
-
 }
