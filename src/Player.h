@@ -51,4 +51,11 @@ player_t* initialize_player(SOCKET* p_socket);
  */
 void free_player(player_t* p_player);
 
+/*
+ * The following function will allow the player to put ships on the board.
+ * Input: A pionter to the player.
+ * Output: None.
+ */
+void put_ships(player_t* p_player);
+
 #endif // PLAYER_H

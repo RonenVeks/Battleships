@@ -89,3 +89,9 @@ free_player(player_t* p_player) {
     free(p_player->board);
     free(p_player);
 }
+
+void 
+put_ships(player_t* p_player) {
+    int option = 1, key, ships_put = 0;
+
+}
