@@ -90,6 +90,11 @@ free_player(player_t* p_player) {
     free(p_player);
 }
 
+/*
+ * The following function will print out a specific cell according to it's value.
+ * Input: The cell that should be displayed.
+ * Output: None.
+ */
 static void
 display_cell(cell_t cell) {
     switch (cell.value) {
@@ -110,6 +115,21 @@ display_cell(cell_t cell) {
             break;
     }
     printf("%s|", YELLOW);
+}
+
+/*
+ * The following function will print out a specific row out of the player's board.
+ * Input: The row that will be printed.
+ * Output: None.
+ */
+void
+display_single_row(cell_t* row) {
+    printf("%s|", YELLOW);
+
+    for (int column = 0; column < BOARD_SIZE; column++)
+        display_cell(row[column]);
+
+    printf("%s", RESET); // Reseting the colors
 }
 
 /*

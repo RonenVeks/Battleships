@@ -61,4 +61,6 @@ void free_player(player_t* p_player);
  */
 void put_ships(player_t* p_player);
 
+void display_single_row(cell_t* row);
+
 #endif // PLAYER_H
