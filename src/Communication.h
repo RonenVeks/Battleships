@@ -24,4 +24,11 @@
  */
 bool accept_partner(SOCKET* p_socket);
 
+/*
+ * The following function asks the user for an IP address and connects him to the other partner.
+ * Input: A pointer to the socket on which the connection is established.
+ * Output: A boolean value that indicates whether or not was the connection successfull.
+ */
+bool connect_to_partner(SOCKET* p_socket);
+
 #endif // COMMUNICATION_H
