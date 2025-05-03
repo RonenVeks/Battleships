@@ -11,7 +11,7 @@ int
 main(void) {
     SOCKET user_socket;
     WSADATA wsa_data;
-    // int menu_function = get_menu_function();
+    //int menu_function = get_menu_function();
     
     if (WSAStartup(MAKEWORD(2, 2), &wsa_data)) {
         PRINT_ERROR("WSAStartup failed");
