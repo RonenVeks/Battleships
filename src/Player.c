@@ -301,3 +301,22 @@ put_ships(player_t* p_player) {
         }
     }
 }
+
+char* 
+serialize_board(player_t* p_player) {
+    int column;
+
+    // Allocate Memory
+    char* to_string = (char*)calloc(BOARD_SIZE * BOARD_SIZE, sizeof(char));
+    if (!to_string) {
+        PRINT_ERROR("Memory allocation failed");
+        return NULL;
+    }
+
+    // Pushing every cell into the string
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (column = 0; column < BOARD_SIZE; column++)
+            to_string[(row * BOARD_SIZE) + column] = (char)((int)('0') + p_player->board[row][column].value);
+
+    return to_string;
+}

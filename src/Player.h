@@ -61,4 +61,11 @@ void free_player(player_t* p_player);
  */
 void put_ships(player_t* p_player);
 
+/*
+ * The following function seralizes the player's board into a string.
+ * Input: A pointer to the player;
+ * Output: A serialized string representing the player's board.
+ */
+char* serialize_board(player_t* p_player);
+
 #endif // PLAYER_H

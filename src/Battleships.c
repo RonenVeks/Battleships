@@ -20,6 +20,9 @@ main(void) {
 
     player_t* p = initialize_player(&user_socket);
     put_ships(p);
+    char* to_string = serialize_board(p);
+    printf("%s\n", to_string);
+    free(to_string);
     free_player(p);
 
     /*switch (menu_function) {
