@@ -1,6 +1,11 @@
 #include "Menu.h"
 
-void
+/*
+ * The following function prints a colors ASCII art onto the screen.
+ * Input: None.
+ * Output: None.
+ */
+static void
 print_logo() {
     printf("%s ________  ________  _________  _________  ___       _______   ________  ___  ___  ___  ________  ________      \n", RED);
     printf("|\\   __  \\|\\   __  \\|\\___   ___\\\\___   ___\\\\  \\     |\\  ___ \\ |\\   ____\\|\\  \\|\\  \\|\\  \\|\\   __  \\|\\   ____\\     \n");

@@ -9,13 +9,6 @@
 #define EXIT_CODE       103
 
 /*
- * The following function prints a colors ASCII art onto the screen.
- * Input: None.
- * Output: None.
- */
-void print_logo();
-
-/*
  * The following function lets the user decide on the menu function they will:
  *      Join An existing game
  *      Create a new game

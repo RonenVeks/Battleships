@@ -13,7 +13,10 @@
 #define MISS -2
 
 // Plan ships will be increased by this number for easier displaying
-#define PLAN_DIFFERENCE
+#define PLAN_DIFFERENCE 6
+
+// Ship ASCII displaying value
+#define SHIP_ASCII (char)(178)
 
 typedef struct {
     int row, column;
@@ -50,5 +53,12 @@ player_t* initialize_player(SOCKET* p_socket);
  * Output: None.
  */
 void free_player(player_t* p_player);
+
+/*
+ * The following function will allow the player to put ships on the board.
+ * Input: A pionter to the player.
+ * Output: None.
+ */
+void put_ships(player_t* p_player);
 
 #endif // PLAYER_H
