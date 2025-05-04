@@ -1,11 +1,11 @@
 #include "Menu.h"   
 #include "Communication.h"
-#include "Player.h"
+#include "Game.h"
 #include <windows.h>
 
 /*
  * Compilation line:
-gcc -o Battleships src/Battleships.c src/IO_Assist.h src/IO_Assist.c src/Menu.h src/Menu.c src/Communication.h src/Communication.c src/Player.h src/Player.c -lws2_32 -liphlpapi
+gcc -o Battleships src/Battleships.c src/IO_Assist.h src/IO_Assist.c src/Menu.h src/Menu.c src/Communication.h src/Communication.c src/Player.h src/Player.c src/Game.h src/Game.c -lws2_32 -liphlpapi
  */
 
 /*
@@ -130,6 +130,7 @@ main(void) {
     free(params);
 
     // display_board(p_opponent); // Might be needed again in the future
+    display_both_board(p_player, p_opponent);
 
     free_player(p_opponent);
     free_player(p_player);
