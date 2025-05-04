@@ -17,14 +17,20 @@ gcc -o Battleships src/Battleships.c src/IO_Assist.h src/IO_Assist.c src/Menu.h 
  */
 DWORD WINAPI 
 move_ships(LPVOID lp_player) { 
-    put_ships((player_t*)lp_player);
+    player_t* p_player = (player_t*)lp_player;
+    put_ships(p_player);
+
+    int bytes_sent = send(*p_player->p_socket, serialize_board(p_player), SERIALIZED_LENGTH, 0);
+    if (bytes_sent == SOCKET_ERROR) {
+        PRINT_ERROR("Board sending failed");
+        return 1;
+    }
     return 0;
 }
 
 // Structure for function parameters
 typedef struct {
     player_t* p_user, *p_result;
-    SOCKET* p_socket;
 } receive_result_t;
 
 /*
@@ -39,12 +45,9 @@ DWORD WINAPI
 receive_board(LPVOID lp_params) {
     char buffer[SERIALIZED_LENGTH];
     receive_result_t* receiving = (receive_result_t*)lp_params;
-    if (recv(*receiving->p_socket, buffer, SERIALIZED_LENGTH, 0) <= 0) {
-        PRINT_ERROR("Connection failed");
-        return 1;
-    }
+    while (recv(*receiving->p_user->p_socket, buffer, SERIALIZED_LENGTH, 0) <= 0) {}
 
-    deserialize_board(receiving->p_user, buffer);
+    receiving->p_result = deserialize_board(receiving->p_user, buffer);
     return 0;
 }
 
@@ -71,16 +74,6 @@ main(void) {
         return EXIT_FAILURE;
     }
 
-    /*player_t* p = initialize_player(&user_socket, true);
-    put_ships(p);
-    char* to_string = serialize_board(p);
-    printf("%s\n", to_string);
-    player_t* o = deserialize_board(p, to_string);
-    display_board(o);
-    free(to_string);
-    free_player(o);
-    free_player(p);*/
-
     // Connecting between the menu selection and the correct function
     switch (menu_function_code) {
         case JOIN_CODE:
@@ -92,16 +85,54 @@ main(void) {
             created = true;
             break;
         case EXIT_CODE:
+            WSACleanup();
             return EXIT_SUCCESS;
     }
 
     // Activating the menu function
     if (!menu_function(&user_socket))
-        return EXIT_FAILURE;
+        goto failure;
 
     p_player = initialize_player(&user_socket, created);
     if (!p_player)
-        return EXIT_FAILURE;
+        goto failure;
+
+    // Creating the threads
+    h_ships_movement = CreateThread(NULL, 0, move_ships, p_player, 0, NULL);
+    receive_result_t* params = (receive_result_t*)malloc(sizeof(receive_result_t));
+    if (!params) {
+        PRINT_ERROR("Memory allocation failed");
+        free_player(p_player);
+        goto failure;
+    }
+    params->p_user = p_player;
+    params->p_result = NULL;
+    h_receive_board = CreateThread(NULL, 0, receive_board, params, 0, NULL);
+
+    if (!h_ships_movement || !h_receive_board) {
+        PRINT_ERROR("Couldn't create threads");
+        free(params);
+        free_player(p_player);
+        goto failure;
+    }
+
+    // Activating the threads
+    WaitForSingleObject(h_ships_movement, INFINITE);
+    WaitForSingleObject(h_receive_board, INFINITE);
+
+    // Closing threads
+    CloseHandle(h_ships_movement);
+    CloseHandle(h_receive_board);
+
+    display_board(params->p_result);
+
+    free_player(params->p_result);
+    free(params);
+    free_player(p_player);
 
     return EXIT_SUCCESS;
+
+failure:
+    WSACleanup();
+    return EXIT_FAILURE;
 }
