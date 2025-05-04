@@ -21,4 +21,10 @@ void display_both_boards(player_t* p_user, player_t* p_opponent);
  */
 bool attack_opponent(player_t* p_user, player_t* p_opponent);
 
+/*
+ * The following function lets the user to be attacked, processes 
+ * the attack and respondes accordingly.
+ */
+bool get_attacked(player_t* p_user);
+
 #endif // GAME_H

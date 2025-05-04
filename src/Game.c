@@ -55,7 +55,7 @@ attack_opponent(player_t* p_user, player_t* p_opponent) {
     buffer[0] = (int)('0') + row;
     buffer[1] = (int)('0') + column;
 
-    if (send(*p_user->p_socket, buffer, BUFFER_SIZE, 0)) {
+    if (send(*p_user->p_socket, buffer, BUFFER_SIZE, 0) == SOCKET_ERROR) {
         PRINT_ERROR("Unable to attack opponent");
         return false;
     }
@@ -66,5 +66,27 @@ attack_opponent(player_t* p_user, player_t* p_opponent) {
     // Change board according to the opponent's response
     p_opponent->p_marked->value = buffer[0] == HIT_CODE ? HIT : MISS;
     p_opponent->p_marked->marked = false;
+    return true;
+}
+
+bool
+get_attacked(player_t* p_user) {
+    int row, column;
+    char buffer[BUFFER_SIZE];
+
+    // Receiving attack
+    while (recv(*p_user->p_socket, buffer, BUFFER_SIZE, 0) <= 0) {}
+
+    row = buffer[0] - (int)('0');
+    column = buffer[1] - (int)('0');
+
+    // Sending a response
+    buffer[0] = p_user->board[row][column].value > 0 ? HIT_CODE : MISS_CODE;
+    buffer[1] = '0';
+    if (send(*p_user->p_socket, buffer, BUFFER_SIZE, 0) == SOCKET_ERROR) {
+        PRINT_ERROR("Unable to send response");
+        return false;
+    }
+
     return true;
 }
