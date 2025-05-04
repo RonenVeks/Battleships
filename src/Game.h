@@ -3,11 +3,22 @@
 
 #include "Player.h"
 
+#define BUFFER_SIZE 2
+#define HIT_CODE '1'
+#define MISS_CODE '2'
+
 /*
  * The following function prints out both of the board next to each other.
  * Input: A pointer to the user's player and a pointer to the opponent's player.
  * Output: None.
  */
-void display_both_board(player_t* p_user, player_t* p_opponent);
+void display_both_boards(player_t* p_user, player_t* p_opponent);
+
+/*
+ * The following function allows the user to attack their opponent wherever they'd like.
+ * Input: A pointer to the user's player and a pointer to the opponent's player.
+ * Output: A boolean value that indicates whether or not every was successfull.
+ */
+bool attack_opponent(player_t* p_user, player_t* p_opponent);
 
 #endif // GAME_H
