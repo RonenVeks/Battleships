@@ -45,6 +45,7 @@ DWORD WINAPI
 receive_board(LPVOID lp_params) {
     char buffer[SERIALIZED_LENGTH];
     receive_result_t* receiving = (receive_result_t*)lp_params;
+
     while (recv(*receiving->p_user->p_socket, buffer, SERIALIZED_LENGTH, 0) <= 0) {}
 
     receiving->p_result = deserialize_board(receiving->p_user, buffer);
@@ -56,7 +57,7 @@ main(void) {
     SOCKET user_socket;
     WSADATA wsa_data;
     bool (*menu_function)(SOCKET*), created;
-    player_t* p_player;
+    player_t* p_player, *p_opponent;
 
     // Variables for multithreading
     HANDLE h_ships_movement, h_receive_board;
@@ -69,6 +70,7 @@ main(void) {
         return EXIT_FAILURE;
     }
     
+    // Start WSA
     if (WSAStartup(MAKEWORD(2, 2), &wsa_data)) {
         PRINT_ERROR("WSAStartup failed");
         return EXIT_FAILURE;
@@ -124,10 +126,12 @@ main(void) {
     CloseHandle(h_ships_movement);
     CloseHandle(h_receive_board);
 
-    display_board(params->p_result);
-
-    free_player(params->p_result);
+    p_opponent = params->p_result;
     free(params);
+
+    // display_board(p_opponent); // Might be needed again in the future
+
+    free_player(p_opponent);
     free_player(p_player);
 
     return EXIT_SUCCESS;
