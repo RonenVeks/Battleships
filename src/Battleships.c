@@ -52,6 +52,27 @@ receive_board(LPVOID lp_params) {
     return 0;
 }
 
+/*
+ * The following function acts as the main game loop.
+ * Input: A pointer to the user's player and the opponent's player.
+ * Output: None.
+ */
+void
+game_loop(player_t* p_user, player_t* p_opponent) {
+    bool game = true;
+
+    while (game) {
+        display_both_boards(p_user, p_opponent);
+
+        if (p_user->turn) {
+            p_opponent->p_marked->marked = true;
+            attack_opponent(p_user, p_opponent);
+        } else get_attacked(p_user);
+
+        p_user->turn = !p_user->turn;
+    }
+}
+
 int
 main(void) {
     SOCKET user_socket;
@@ -130,7 +151,9 @@ main(void) {
     free(params);
 
     // display_board(p_opponent); // Might be needed again in the future
-    display_both_board(p_player, p_opponent);
+    // display_both_boards(p_player, p_opponent);
+
+    game_loop(p_player, p_opponent);
 
     free_player(p_opponent);
     free_player(p_player);

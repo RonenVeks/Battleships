@@ -65,6 +65,7 @@ attack_opponent(player_t* p_user, player_t* p_opponent) {
 
     // Change board according to the opponent's response
     p_opponent->p_marked->value = buffer[0] == HIT_CODE ? HIT : MISS;
+    p_opponent->p_marked->hidden = false;
     p_opponent->p_marked->marked = false;
     return true;
 }
