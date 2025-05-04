@@ -305,6 +305,9 @@ put_ships(player_t* p_player) {
             } else if (key == (int)('q')) ships_put = SHIPS_AMOUNT;
         }
     }
+
+    // Turning on mark
+    p_player->p_marked->marked = true;
 }
 
 char* 
