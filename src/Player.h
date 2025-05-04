@@ -18,6 +18,9 @@
 // Ship ASCII displaying value
 #define SHIP_ASCII (char)(178)
 
+// The length of a serialized board
+#define SERIALIZED_LENGTH 100
+
 typedef struct {
     int row, column;
 } position_t;
@@ -68,5 +71,16 @@ void put_ships(player_t* p_player);
  * Output: A serialized string representing the player's board.
  */
 char* serialize_board(player_t* p_player);
+
+/*
+ * The following function deserializes a given board string.
+ * Input: A pointer to the already existing player and the
+ * serialized board string.
+ * Output: A pointer to a newely allocated player.
+ */
+player_t* deserialize_board(player_t* p_player, char* to_string);
+
+// Temporary function to display the board
+void display_board(player_t* p_player);
 
 #endif // PLAYER_H

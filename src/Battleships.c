@@ -22,7 +22,10 @@ main(void) {
     put_ships(p);
     char* to_string = serialize_board(p);
     printf("%s\n", to_string);
+    player_t* o = deserialize_board(p, to_string);
+    display_board(o);
     free(to_string);
+    free_player(o);
     free_player(p);
 
     /*switch (menu_function) {

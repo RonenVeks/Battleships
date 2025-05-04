@@ -11,6 +11,7 @@ initialize_player(SOCKET* p_socket, bool created) {
     if (!new_player) 
         goto allocation_failure;
 
+    // Setting default parameters
     new_player->p_socket = p_socket;
     new_player->turn = created;
 
@@ -40,6 +41,9 @@ initialize_player(SOCKET* p_socket, bool created) {
             p_cell->marked = false;
         }
     }
+
+    // Setting the top left cell to be the mark
+    new_player->p_marked = &(new_player->board[0][0]);
 
     // Allocating the array of ships
     new_player->ships = (ship_t*)calloc(SHIPS_AMOUNT, sizeof(ship_t));
@@ -308,7 +312,7 @@ serialize_board(player_t* p_player) {
     int column;
 
     // Allocate Memory
-    char* to_string = (char*)calloc(BOARD_SIZE * BOARD_SIZE, sizeof(char));
+    char* to_string = (char*)calloc(SERIALIZED_LENGTH, sizeof(char));
     if (!to_string) {
         PRINT_ERROR("Memory allocation failed");
         return NULL;
@@ -320,4 +324,57 @@ serialize_board(player_t* p_player) {
             to_string[(row * BOARD_SIZE) + column] = (char)((int)('0') + p_player->board[row][column].value);
 
     return to_string;
+}
+
+/*
+ * The following function iterates through a player's array of ships and 
+ * find the ship with the specified serial number.
+ * Input: A pointer to the player and the serial number.
+ * Output: A pointer to the ship with the specified serial number.
+ */
+static ship_t*
+find_ship_by_number(player_t* p_player, int number) {
+    for (int ship = 0; ship < SHIPS_AMOUNT; ship++)
+        if (p_player->ships[ship].serial_number == number)
+            return &(p_player->ships[ship]);
+    return NULL;
+}
+
+player_t* 
+deserialize_board(player_t* p_player, char* to_string) {
+    int column, cell;
+    ship_t* p_ship;
+
+    // Initializing the opponent
+    player_t* opponent = initialize_player(p_player->p_socket, !p_player->turn);
+    if (!opponent)
+        return NULL;
+
+    // An array to keep track of the indexes of every ship
+    int ships_indexes[SHIPS_AMOUNT] = { 0 };
+
+    // Deserializing board string
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (column = 0; column < BOARD_SIZE; column++) {
+            cell = (int)(to_string[(row * BOARD_SIZE) + column]) - (int)('0'); 
+
+            opponent->board[row][column].value = cell;
+
+            if (cell > 0) {
+                p_ship = find_ship_by_number(opponent, cell);
+                p_ship->positions[ships_indexes[cell - 1]].row = row;
+                p_ship->positions[ships_indexes[cell - 1]].column = column;
+                ships_indexes[cell - 1]++;
+            }
+        }
+
+    return opponent;
+}
+
+void 
+display_board(player_t* p_player) {
+    for (int row = 0; row < BOARD_SIZE; row++) {
+        display_single_row(p_player->board[row]);
+        printf("\n");
+    }
 }
