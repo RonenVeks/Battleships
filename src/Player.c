@@ -1,7 +1,7 @@
 #include "Player.h"
 
 player_t*
-initialize_player(SOCKET* p_socket) {
+initialize_player(SOCKET* p_socket, bool created) {
     int row, column;
     cell_t* p_cell;
     ship_t* p_ship;
@@ -12,6 +12,7 @@ initialize_player(SOCKET* p_socket) {
         goto allocation_failure;
 
     new_player->p_socket = p_socket;
+    new_player->turn = created;
 
     // Allocating the player's board
     new_player->board = (cell_t**)calloc(BOARD_SIZE, sizeof(cell_t*));

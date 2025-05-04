@@ -18,7 +18,7 @@ main(void) {
         return EXIT_FAILURE;
     }
 
-    player_t* p = initialize_player(&user_socket);
+    player_t* p = initialize_player(&user_socket, true);
     put_ships(p);
     char* to_string = serialize_board(p);
     printf("%s\n", to_string);

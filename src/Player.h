@@ -38,6 +38,7 @@ typedef struct {
     cell_t** board, *p_marked;
     ship_t* ships;
     SOCKET* p_socket;
+    bool turn;
 } player_t;
 
 /*
@@ -45,7 +46,7 @@ typedef struct {
  * Input: A pointer to the socket of the user.
  * Output: A pointer to the newely allocated player.
  */
-player_t* initialize_player(SOCKET* p_socket);
+player_t* initialize_player(SOCKET* p_socket, bool created);
 
 /*
  * The following function will free the allocation of a given player.
