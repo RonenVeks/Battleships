@@ -82,7 +82,13 @@ get_attacked(player_t* p_user) {
     column = buffer[1] - (int)('0');
 
     // Sending a response
-    buffer[0] = p_user->board[row][column].value > 0 ? HIT_CODE : MISS_CODE;
+    if (p_user->board[row][column].value > 0) {
+        buffer[0] = HIT_CODE;
+        p_user->board[row][column].value = HIT;
+    } else {
+        buffer[0] = MISS_CODE;
+        p_user->board[row][column].value = MISS;
+    }
     buffer[1] = '0';
     if (send(*p_user->p_socket, buffer, BUFFER_SIZE, 0) == SOCKET_ERROR) {
         PRINT_ERROR("Unable to send response");
