@@ -34,7 +34,7 @@ typedef struct {
 typedef struct {
     int value;
     position_t position;
-    bool marked;
+    bool marked, hidden;
 } cell_t;
 
 typedef struct {
@@ -59,6 +59,13 @@ player_t* initialize_player(SOCKET* p_socket, bool created);
 void free_player(player_t* p_player);
 
 /*
+ * The following function will print out a specific row out of the player's board.
+ * Input: The row that will be printed.
+ * Output: None.
+ */
+void display_single_row(cell_t* row);
+
+/*
  * The following function will allow the player to put ships on the board.
  * Input: A pionter to the player.
  * Output: None.
@@ -79,8 +86,5 @@ char* serialize_board(player_t* p_player);
  * Output: A pointer to a newely allocated player.
  */
 player_t* deserialize_board(player_t* p_player, char* to_string);
-
-// Temporary function to display the board
-//void display_board(player_t* p_player);
 
 #endif // PLAYER_H

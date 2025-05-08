@@ -39,6 +39,7 @@ initialize_player(SOCKET* p_socket, bool created) {
             p_cell->position = (position_t){ .row = row, .column = column };
             p_cell->value = WATER;
             p_cell->marked = false;
+            p_cell->hidden = false;
         }
     }
 
@@ -102,7 +103,9 @@ free_player(player_t* p_player) {
  */
 static void
 display_cell(cell_t cell) {
-    switch (cell.value) {
+    if (cell.hidden)
+        cell.marked ? printf("%s%c", RESET, SHIP_ASCII) : printf(" ");
+    else switch (cell.value) {
         case WATER:
             cell.marked ? printf("%s%s~%s", BG_BLUE, BLACK, RESET) : printf("%s~", BLUE);
             break;
@@ -122,12 +125,7 @@ display_cell(cell_t cell) {
     printf("%s|", YELLOW);
 }
 
-/*
- * The following function will print out a specific row out of the player's board.
- * Input: The row that will be printed.
- * Output: None.
- */
-static void
+void
 display_single_row(cell_t* row) {
     printf("%s|", YELLOW);
 
@@ -305,9 +303,6 @@ put_ships(player_t* p_player) {
             } else if (key == (int)('q')) ships_put = SHIPS_AMOUNT;
         }
     }
-
-    // Turning on mark
-    p_player->p_marked->marked = true;
 }
 
 char* 
@@ -362,22 +357,17 @@ deserialize_board(player_t* p_player, char* to_string) {
             cell = (int)(to_string[(row * BOARD_SIZE) + column]) - (int)('0'); 
 
             opponent->board[row][column].value = cell;
+            opponent->board[row][column].hidden = true;
 
+            // If ship detected
             if (cell > 0) {
                 p_ship = find_ship_by_number(opponent, cell);
                 p_ship->positions[ships_indexes[cell - 1]].row = row;
                 p_ship->positions[ships_indexes[cell - 1]].column = column;
+                p_ship->length = cell == 5 ? 3 : cell + 1;
                 ships_indexes[cell - 1]++;
             }
         }
 
     return opponent;
-}
-
-void 
-display_board(player_t* p_player) {
-    for (int row = 0; row < BOARD_SIZE; row++) {
-        display_single_row(p_player->board[row]);
-        printf("\n");
-    }
 }

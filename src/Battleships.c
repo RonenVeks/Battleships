@@ -1,11 +1,11 @@
 #include "Menu.h"   
 #include "Communication.h"
-#include "Player.h"
+#include "Game.h"
 #include <windows.h>
 
 /*
  * Compilation line:
-gcc -o Battleships src/Battleships.c src/IO_Assist.h src/IO_Assist.c src/Menu.h src/Menu.c src/Communication.h src/Communication.c src/Player.h src/Player.c -lws2_32 -liphlpapi
+gcc -o Battleships src/Battleships.c src/IO_Assist.h src/IO_Assist.c src/Menu.h src/Menu.c src/Communication.h src/Communication.c src/Player.h src/Player.c src/Game.h src/Game.c -lws2_32 -liphlpapi
  */
 
 /*
@@ -50,6 +50,31 @@ receive_board(LPVOID lp_params) {
 
     receiving->p_result = deserialize_board(receiving->p_user, buffer);
     return 0;
+}
+
+/*
+ * The following function acts as the main game loop.
+ * Input: A pointer to the user's player and the opponent's player.
+ * Output: None.
+ */
+void
+game_loop(player_t* p_user, player_t* p_opponent) {
+    char end_code = '0';
+
+    while (end_code == '0') {
+        display_both_boards(p_user, p_opponent);
+
+        if (p_user->turn) {
+            p_opponent->p_marked->marked = true;
+            attack_opponent(p_user, p_opponent, &end_code);
+        } else get_attacked(p_user, &end_code);
+
+        p_user->turn = !p_user->turn;
+    }
+
+    CLEAR_TERMINAL;
+    expose_both_boards(p_user, p_opponent);
+    end_code == DEFEAT_CODE ? printf("%sYOU LOST...%s", RED, RESET) : printf("%sYOU WON!!!%s", GREEN, RESET);
 }
 
 int
@@ -130,6 +155,9 @@ main(void) {
     free(params);
 
     // display_board(p_opponent); // Might be needed again in the future
+    // display_both_boards(p_player, p_opponent);
+
+    game_loop(p_player, p_opponent);
 
     free_player(p_opponent);
     free_player(p_player);
