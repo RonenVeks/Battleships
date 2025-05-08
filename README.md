@@ -1,5 +1,5 @@
 <img src="https://github.com/RonenVeks/Battleships/blob/Readme/assets/Readme-Logo.png"/>
-<div align="center"><p>A CLI Battleships game two players can under the same LAN</p></div>
+<div align="center"><p>A CLI Battleships game two players can play together under the same LAN</p></div>
 
 ## Installation⬇️
 <p>In order to install the game, run the following command:</p>
