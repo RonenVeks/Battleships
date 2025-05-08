@@ -154,9 +154,6 @@ main(void) {
     p_opponent = params->p_result;
     free(params);
 
-    // display_board(p_opponent); // Might be needed again in the future
-    // display_both_boards(p_player, p_opponent);
-
     game_loop(p_player, p_opponent);
 
     free_player(p_opponent);
