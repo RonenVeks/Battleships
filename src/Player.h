@@ -87,7 +87,4 @@ char* serialize_board(player_t* p_player);
  */
 player_t* deserialize_board(player_t* p_player, char* to_string);
 
-// Temporary function to display the board
-//void display_board(player_t* p_player);
-
 #endif // PLAYER_H

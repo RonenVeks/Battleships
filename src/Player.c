@@ -371,11 +371,3 @@ deserialize_board(player_t* p_player, char* to_string) {
 
     return opponent;
 }
-
-void 
-display_board(player_t* p_player) {
-    for (int row = 0; row < BOARD_SIZE; row++) {
-        display_single_row(p_player->board[row]);
-        printf("\n");
-    }
-}

@@ -31,6 +31,11 @@ bool attack_opponent(player_t* p_user, player_t* p_opponent, char* end_code);
  */
 bool get_attacked(player_t* p_user, char* end_code);
 
+/*
+ * The following function exposes both of the boards next to each other.
+ * Input: A pointer to the user's player and a pointer to the opponent's player.
+ * Output: None.
+ */
 void expose_both_boards(player_t* p_user, player_t* p_opponent);
 
 
