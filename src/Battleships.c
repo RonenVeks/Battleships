@@ -59,18 +59,21 @@ receive_board(LPVOID lp_params) {
  */
 void
 game_loop(player_t* p_user, player_t* p_opponent) {
-    bool game = true;
+    char end_code = '0';
 
-    while (game) {
+    while (end_code == '0') {
         display_both_boards(p_user, p_opponent);
+        display_ships(p_user);
 
         if (p_user->turn) {
             p_opponent->p_marked->marked = true;
-            attack_opponent(p_user, p_opponent);
-        } else get_attacked(p_user);
+            attack_opponent(p_user, p_opponent, &end_code);
+        } else get_attacked(p_user, &end_code);
 
         p_user->turn = !p_user->turn;
     }
+
+    end_code == DEFEAT_CODE ? printf("%sYOU LOST...%s", RED, RESET) : printf("%sYOU WON!!!%s", GREEN, RESET);
 }
 
 int

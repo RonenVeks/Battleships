@@ -26,7 +26,7 @@ change_mark(player_t* p_player, int row, int column) {
 }
 
 bool
-attack_opponent(player_t* p_user, player_t* p_opponent) {
+attack_opponent(player_t* p_user, player_t* p_opponent, char* end_code) {
     bool cell_selected = false;
     int key, row, column;
     char buffer[BUFFER_SIZE];
@@ -40,6 +40,7 @@ attack_opponent(player_t* p_user, player_t* p_opponent) {
         key = 0;
 
         display_both_boards(p_user, p_opponent);
+        display_ships(p_user);
 
         while (!check_key_validation(keys, 5, key)) key = _getch();
 
@@ -48,7 +49,7 @@ attack_opponent(player_t* p_user, player_t* p_opponent) {
         else if (key == KEY_DOWN && row < BOARD_SIZE - 1) change_mark(p_opponent, row + 1, column);
         else if (key == KEY_RIGHT && column < BOARD_SIZE - 1) change_mark(p_opponent, row, column + 1);
         else if (key == KEY_LEFT && column > 0) change_mark(p_opponent, row, column - 1);
-        else if (p_opponent->p_marked->hidden) cell_selected = true;
+        else if (key == KEY_ENTER && p_opponent->p_marked->hidden) cell_selected = true;
     }
 
     // Attacking opponent
@@ -64,14 +65,38 @@ attack_opponent(player_t* p_user, player_t* p_opponent) {
     while (recv(*p_user->p_socket, buffer, BUFFER_SIZE, 0) <= 0) {}
 
     // Change board according to the opponent's response
-    p_opponent->p_marked->value = buffer[0] == HIT_CODE ? HIT : MISS;
-    p_opponent->p_marked->hidden = false;
-    p_opponent->p_marked->marked = false;
+    if (buffer[0] == DEFEAT_CODE)
+        *end_code = WIN_CODE;
+    else {
+        p_opponent->p_marked->value = buffer[0] == HIT_CODE ? HIT : MISS;
+        p_opponent->p_marked->hidden = false;
+        p_opponent->p_marked->marked = false;
+    }
+    return true;
+}
+
+/*
+ * The following function iterates through the cells of every ship and checks if they 
+ * are all hit - meaning defeat.
+ * Input: A pointer to the player.
+ * Output: A boolean value that indicates whether or not was the player defeated.
+ */
+static bool
+check_defeat(player_t* p_player) {
+    int pos;
+    ship_t* p_ship;
+
+    for (int ship_index = 0; ship_index < SHIPS_AMOUNT; ship_index++) {
+        for (pos = 0; pos < p_player->ships[ship_index].length; pos++)
+            if (p_player->board[p_player->ships[pos].positions[pos].row]
+                    [p_player->ships[pos].positions[pos].column].value != HIT)
+                return false;
+    }
     return true;
 }
 
 bool
-get_attacked(player_t* p_user) {
+get_attacked(player_t* p_user, char* end_code) {
     int row, column;
     char buffer[BUFFER_SIZE];
 
@@ -83,8 +108,11 @@ get_attacked(player_t* p_user) {
 
     // Sending a response
     if (p_user->board[row][column].value > 0) {
-        buffer[0] = HIT_CODE;
         p_user->board[row][column].value = HIT;
+        if (check_defeat(p_user)) {
+            buffer[0] = DEFEAT_CODE;
+            *end_code = DEFEAT_CODE;
+        } else buffer[0] = HIT_CODE;
     } else {
         buffer[0] = MISS_CODE;
         p_user->board[row][column].value = MISS;
@@ -96,4 +124,25 @@ get_attacked(player_t* p_user) {
     }
 
     return true;
+}
+
+void
+expose_both_boards(player_t* p_user, player_t* p_opponent) {
+    int column; 
+
+    // Revealing each of the cells
+    for (int row = 0; row < BOARD_SIZE; row++)
+        for (column = 0; column < BOARD_SIZE; column++)
+            p_opponent->board[row][column].hidden = false;
+
+    display_both_boards(p_user, p_opponent);
+}
+
+void display_ships(player_t* p_player) {
+    int i;
+    for (int ship = 0; ship < SHIPS_AMOUNT; ship++) {
+        for (i = 0; i < p_player->ships[ship].length; i++)
+            printf("%d ", p_player->board[p_player->ships[ship].positions[i].row][p_player->ships[ship].positions[i].column].value);
+        printf("\n");
+    }
 }

@@ -364,6 +364,7 @@ deserialize_board(player_t* p_player, char* to_string) {
                 p_ship = find_ship_by_number(opponent, cell);
                 p_ship->positions[ships_indexes[cell - 1]].row = row;
                 p_ship->positions[ships_indexes[cell - 1]].column = column;
+                p_ship->length = cell == 5 ? 3 : cell + 1;
                 ships_indexes[cell - 1]++;
             }
         }
