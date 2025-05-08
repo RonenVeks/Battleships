@@ -63,7 +63,6 @@ game_loop(player_t* p_user, player_t* p_opponent) {
 
     while (end_code == '0') {
         display_both_boards(p_user, p_opponent);
-        display_ships(p_user);
 
         if (p_user->turn) {
             p_opponent->p_marked->marked = true;
@@ -73,6 +72,8 @@ game_loop(player_t* p_user, player_t* p_opponent) {
         p_user->turn = !p_user->turn;
     }
 
+    CLEAR_TERMINAL;
+    expose_both_boards(p_user, p_opponent);
     end_code == DEFEAT_CODE ? printf("%sYOU LOST...%s", RED, RESET) : printf("%sYOU WON!!!%s", GREEN, RESET);
 }
 

@@ -40,7 +40,6 @@ attack_opponent(player_t* p_user, player_t* p_opponent, char* end_code) {
         key = 0;
 
         display_both_boards(p_user, p_opponent);
-        display_ships(p_user);
 
         while (!check_key_validation(keys, 5, key)) key = _getch();
 
@@ -87,9 +86,11 @@ check_defeat(player_t* p_player) {
     ship_t* p_ship;
 
     for (int ship_index = 0; ship_index < SHIPS_AMOUNT; ship_index++) {
-        for (pos = 0; pos < p_player->ships[ship_index].length; pos++)
-            if (p_player->board[p_player->ships[pos].positions[pos].row]
+            p_ship = &(p_player->ships[ship_index]);
+            /*if (p_player->board[p_player->ships[pos].positions[pos].row]
                     [p_player->ships[pos].positions[pos].column].value != HIT)
+                return false;*/
+            if (p_player->board[p_ship->positions[pos].row][p_ship->positions[pos].column].value != HIT)
                 return false;
     }
     return true;
@@ -136,13 +137,4 @@ expose_both_boards(player_t* p_user, player_t* p_opponent) {
             p_opponent->board[row][column].hidden = false;
 
     display_both_boards(p_user, p_opponent);
-}
-
-void display_ships(player_t* p_player) {
-    int i;
-    for (int ship = 0; ship < SHIPS_AMOUNT; ship++) {
-        for (i = 0; i < p_player->ships[ship].length; i++)
-            printf("%d ", p_player->board[p_player->ships[ship].positions[i].row][p_player->ships[ship].positions[i].column].value);
-        printf("\n");
-    }
 }

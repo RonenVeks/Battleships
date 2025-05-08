@@ -9,6 +9,7 @@
 #define DEFEAT_CODE '3'
 #define WIN_CODE '4'
 
+
 /*
  * The following function prints out both of the board next to each other.
  * Input: A pointer to the user's player and a pointer to the opponent's player.
@@ -32,6 +33,5 @@ bool get_attacked(player_t* p_user, char* end_code);
 
 void expose_both_boards(player_t* p_user, player_t* p_opponent);
 
-void display_ships(player_t* p_player);
 
 #endif // GAME_H
